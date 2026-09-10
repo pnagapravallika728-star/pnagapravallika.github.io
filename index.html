@@ -1,63 +1,79 @@
 <!DOCTYPE html>
 <html>
-<style>
-    body {
-        background-color: lightblue;
-        text-align: center;
-    }
+<head>
+    <title>My Website</title>
 
-    h1 {
-        color: purple;
-        font-size: 40px;
-    }
+    <style>
+        body {
+            background-color: lightblue;
+            text-align: center;
+            font-family: Arial;
+        }
 
-    p {
-        color: darkblue;
-        font-size: 20px;
-    }
-</style>
+        h1 {
+            color: purple;
+            font-size: 40px;
+        }
+
+        h2 {
+            color: darkblue;
+        }
+
+        p {
+            color: darkblue;
+            font-size: 20px;
+        }
+
+        textarea {
+            width: 80%;
+            height: 150px;
+            font-size: 18px;
+            padding: 10px;
+        }
+
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
 
 <body>
+
     <h1>Welcome to My Website</h1>
+
     <h2>P. Naga Pravallika</h2>
 
     <p>I am learning to create my own website.</p>
 
-    <<button onclick="alert('Hello Pravallika!')">Click Me</button>
-</html>
-<!DOCTYPE html>
-<html>
-<style>
-    body {
-        background-color: lightblue;
-        text-align: center;
-    }
+    <h2>📝 My Notes</h2>
 
-    h1 {
-        color: purple;
-        font-size: 40px;
-    }
+    <textarea id="note" placeholder="Write your information here..."></textarea>
 
-    p {
-        color: darkblue;
-        font-size: 20px;
-    }
-</style>
+    <br>
 
-<body>
-    <h1>Welcome to My Website</h1>
-    <h2>P. Naga Pravallika</h2>
+    <button onclick="saveNote()">Save Note</button>
 
-    <p>I am learning to create my own website.</p>
+    <button onclick="clearNote()">Clear</button>
 
-    <<button onclick="alert('Hello Pravallika!')">Click Me</button>
-    </html><script>
-function saveNote() {
-    let text = document.getElementById("note").value;
-    localStorage.setItem("myNote", text);
-    alert("Information saved!");
-}
+    <script>
+        function saveNote() {
+            let text = document.getElementById("note").value;
 
-document.getElementById("note").value =
-    localStorage.getItem("myNote") || "";
+            localStorage.setItem("myNote", text);
+
+            alert("Information saved!");
+        }
+
+        document.getElementById("note").value =
+            localStorage.getItem("myNote") || "";
+
+        function clearNote() {
+            document.getElementById("note").value = "";
+            localStorage.removeItem("myNote");
+        }
     </script>
+
+</body>
+</html>
