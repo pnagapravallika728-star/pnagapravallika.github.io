@@ -1,40 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>My Website</title>
-
-    <style>
-        body {
-            background-color: lightblue;
-            text-align: center;
-            font-family: Arial;
-        }
-
-        h1 {
-            color: purple;
-            font-size: 40px;
-        }
-
-        h2 {
-            color: darkblue;
-        }
-
-        p {
-            color: darkblue;
-            font-size: 20px;
-        }
-
-        textarea {
-            width: 80%;
-            height: 150px;
-            font-size: 18px;
-            padding: 10px;
-        }
-
-        button {
-            margin: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
         }
     </style>
 </head>
@@ -47,32 +10,217 @@
 
     <p>I am learning to create my own website.</p>
 
-    <h2>📝 My Notes</h2>
+    <!-- NOTES -->
+    <div class="box">
+        <h2>📝 My Notes</h2>
 
-    <textarea id="note" placeholder="Write your information here..."></textarea>
+        <textarea id="noteInput"
+            placeholder="Write your note here..."></textarea>
 
-    <br>
+        <br>
 
-    <button onclick="saveNote()">Save Note</button>
+        <button onclick="saveNote()">Save Note</button>
+        <button onclick="clearNotes()">Clear Notes</button>
 
-    <button onclick="clearNote()">Clear</button>
+        <div id="notes"></div>
+    </div>
+
+
+    <!-- PHOTOS -->
+    <div class="box">
+        <h2>📷 Photos</h2>
+
+        <input type="file"
+               id="photoInput"
+               accept="image/*"
+               multiple>
+
+        <br>
+
+        <button onclick="showPhotos()">Add Photos</button>
+
+        <div id="photos"></div>
+    </div>
+
+
+    <!-- PDF -->
+    <div class="box">
+        <h2>📄 PDF</h2>
+
+        <input type="file"
+               id="pdfInput"
+               accept="application/pdf"
+               multiple>
+
+        <br>
+
+        <button onclick="showPDFs()">Add PDF</button>
+
+        <div id="pdfs"></div>
+    </div>
+
+
+    <!-- VIDEOS -->
+    <div class="box">
+        <h2>🎥 Videos</h2>
+
+        <input type="file"
+               id="videoInput"
+               accept="video/*"
+               multiple>
+
+        <br>
+
+        <button onclick="showVideos()">Add Videos</button>
+
+        <div id="videos"></div>
+    </div>
+
 
     <script>
+
+        // =========================
+        // NOTES
+        // =========================
+
         function saveNote() {
-            let text = document.getElementById("note").value;
 
-            localStorage.setItem("myNote", text);
+            let note = document.getElementById("noteInput").value;
 
-            alert("Information saved!");
+            if (note.trim() === "") {
+                alert("Please write a note first!");
+                return;
+            }
+
+            let notes = JSON.parse(localStorage.getItem("myNotes")) || [];
+
+            notes.push(note);
+
+            localStorage.setItem("myNotes", JSON.stringify(notes));
+
+            document.getElementById("noteInput").value = "";
+
+            displayNotes();
         }
 
-        document.getElementById("note").value =
-            localStorage.getItem("myNote") || "";
 
-        function clearNote() {
-            document.getElementById("note").value = "";
-            localStorage.removeItem("myNote");
+        function displayNotes() {
+
+            let notes = JSON.parse(localStorage.getItem("myNotes")) || [];
+
+            let output = "";
+
+            notes.forEach(function(note, index) {
+
+                output += `
+                    <div class="item">
+                        <p>${note}</p>
+
+                        <button onclick="deleteNote(${index})">
+                            Delete
+                        </button>
+                    </div>
+                `;
+            });
+
+            document.getElementById("notes").innerHTML = output;
         }
+
+
+        function deleteNote(index) {
+
+            let notes = JSON.parse(localStorage.getItem("myNotes")) || [];
+
+            notes.splice(index, 1);
+
+            localStorage.setItem("myNotes", JSON.stringify(notes));
+
+            displayNotes();
+        }
+
+
+        function clearNotes() {
+
+            localStorage.removeItem("myNotes");
+
+            displayNotes();
+        }
+
+
+        // =========================
+        // PHOTOS
+        // =========================
+
+        function showPhotos() {
+
+            let files = document.getElementById("photoInput").files;
+
+            let output = document.getElementById("photos");
+
+            output.innerHTML = "";
+
+            for (let i = 0; i < files.length; i++) {
+
+                let image = document.createElement("img");
+
+                image.src = URL.createObjectURL(files[i]);
+
+                output.appendChild(image);
+            }
+        }
+
+
+        // =========================
+        // PDF
+        // =========================
+
+        function showPDFs() {
+
+            let files = document.getElementById("pdfInput").files;
+
+            let output = document.getElementById("pdfs");
+
+            output.innerHTML = "";
+
+            for (let i = 0; i < files.length; i++) {
+
+                let pdf = document.createElement("iframe");
+
+                pdf.src = URL.createObjectURL(files[i]);
+
+                output.appendChild(pdf);
+            }
+        }
+
+
+        // =========================
+        // VIDEOS
+        // =========================
+
+        function showVideos() {
+
+            let files = document.getElementById("videoInput").files;
+
+            let output = document.getElementById("videos");
+
+            output.innerHTML = "";
+
+            for (let i = 0; i < files.length; i++) {
+
+                let video = document.createElement("video");
+
+                video.src = URL.createObjectURL(files[i]);
+
+                video.controls = true;
+
+                output.appendChild(video);
+            }
+        }
+
+
+        // Load saved notes when website opens
+        displayNotes();
+
     </script>
 
 </body>
