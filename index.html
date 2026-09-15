@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,10 +28,9 @@
         }
 
         .box {
-            background: white;
+            background-color: white;
             padding: 20px;
-            margin: 20px auto;
-            max-width: 600px;
+            margin-top: 25px;
             border-radius: 15px;
         }
 
@@ -38,22 +38,23 @@
             width: 90%;
             height: 150px;
             padding: 10px;
-            font-size: 16px;
-        }
-
-        input {
-            padding: 10px;
-            width: 90%;
-            margin: 10px;
+            font-size: 18px;
+            border-radius: 10px;
         }
 
         button {
-            padding: 12px 20px;
-            margin: 8px;
+            margin: 10px;
+            padding: 12px 25px;
+            font-size: 18px;
             border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
+            border-radius: 10px;
+            background-color: purple;
+            color: white;
+        }
+
+        #status {
+            color: green;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -66,92 +67,99 @@
 
     <p>I am learning to create my own website.</p>
 
+    <button onclick="alert('Hello Pravallika!')">
+        Click Me
+    </button>
+
     <div class="box">
+
         <h2>📝 My Notes</h2>
 
-        <input type="text" id="titleInput" placeholder="Enter note title">
-
-        <textarea id="noteInput"
+        <textarea
+            id="noteInput"
             placeholder="Write your note here..."></textarea>
 
         <br>
 
-        <button onclick="saveNote()">Save Note</button>
+        <button onclick="saveNote()">
+            Save Note
+        </button>
 
-        <div id="message"></div>
+        <p id="status"></p>
+
     </div>
 
 
-    <!-- Firebase -->
     <script type="module">
 
-        import { initializeApp } from
-        "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { initializeApp }
+        from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
         import {
             getFirestore,
             collection,
-            addDoc
-        } from
-        "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+            addDoc,
+            serverTimestamp
+        }
+        from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-        // ==============================
-        // PAnpm install firebase STE YOUR FIREBASE CONFIG HERE
-        // ==============================
+        // FIREBASE CONFIG
 
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyDT-OQyTtKqabXqbew6_5s5p9wkmXkhwVA",
+            authDomain: "pnp-bee83.firebaseapp.com",
+            projectId: "pnp-bee83",
+            storageBucket: "pnp-bee83.firebasestorage.app",
+            messagingSenderId: "62730267278",
+            appId: "1:62730267278:web:01cf8f7f56043abe17b7df",
+            measurementId: "G-D8EVLSVJWP"
         };
 
 
-        // Start Firebase
+        // START FIREBASE
+
         const app = initializeApp(firebaseConfig);
 
-        // Start Firestore
         const db = getFirestore(app);
 
 
-        // Save Note
-        window.saveNote = async function () {
+        // SAVE NOTE
 
-            const title =
-                document.getElementById("titleInput").value;
+        window.saveNote = async function() {
 
             const note =
                 document.getElementById("noteInput").value;
 
-            if (title === "" || note === "") {
-                alert("Please enter title and note.");
+            if (note.trim() === "") {
+                alert("Please write a note first.");
                 return;
             }
 
             try {
 
-                await addDoc(collection(db, "notes"), {
-                    title: title,
-                    note: note,
-                    createdAt: new Date()
-                });
+                await addDoc(
+                    collection(db, "notes"),
+                    {
+                        text: note,
+                        createdAt: serverTimestamp()
+                    }
+                );
 
-                document.getElementById("message").innerHTML =
-                    "<p>✅ Note saved successfully!</p>";
+                document.getElementById("status").innerText =
+                    "✅ Note saved successfully!";
 
-                document.getElementById("titleInput").value = "";
                 document.getElementById("noteInput").value = "";
 
             } catch (error) {
 
                 console.error(error);
 
-                alert("Note save failed. Check Firebase settings.");
+                document.getElementById("status").innerText =
+                    "❌ Note save avvaledu. Firebase settings check cheyyandi.";
 
             }
+
         };
 
     </script>
