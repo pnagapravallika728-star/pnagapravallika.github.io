@@ -1,7 +1,3 @@
-
-    
-
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -59,6 +55,15 @@
             color: green;
             font-weight: bold;
         }
+
+        .note {
+            background-color: #f3f3f3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            text-align: left;
+            white-space: pre-wrap;
+        }
     </style>
 </head>
 
@@ -90,8 +95,13 @@
 
         <p id="status"></p>
 
-    </div>
+        <h2>📚 Saved Notes</h2>
 
+        <div id="notesList">
+            Loading notes...
+        </div>
+
+    </div>
 
     <script type="module">
 
@@ -102,7 +112,8 @@
             getFirestore,
             collection,
             addDoc,
-            serverTimestamp
+            serverTimestamp,
+            onSnapshot
         }
         from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -159,11 +170,61 @@
                 console.error(error);
 
                 document.getElementById("status").innerText =
-                    "❌ Note save avvaledu. Firebase settings check cheyyandi.";
+                    "❌ Note save avvaledu.";
 
             }
 
         };
+
+
+        // LOAD SAVED NOTES
+
+        onSnapshot(
+            collection(db, "notes"),
+
+            (snapshot) => {
+
+                const notesList =
+                    document.getElementById("notesList");
+
+                notesList.innerHTML = "";
+
+                if (snapshot.empty) {
+
+                    notesList.innerHTML =
+                        "<p>No saved notes yet.</p>";
+
+                    return;
+                }
+
+
+                snapshot.forEach((doc) => {
+
+                    const data = doc.data();
+
+                    const noteDiv =
+                        document.createElement("div");
+
+                    noteDiv.className = "note";
+
+                    noteDiv.innerText =
+                        data.text || "";
+
+                    notesList.appendChild(noteDiv);
+
+                });
+
+            },
+
+            (error) => {
+
+                console.error(error);
+
+                document.getElementById("notesList").innerHTML =
+                    "<p>❌ Notes load avvaledu.</p>";
+
+            }
+        );
 
     </script>
 
